@@ -1,7 +1,6 @@
 import pandas as pd
 
-# import numpy as np
-
+# set up the file names and directories
 file1 = "py80lookup-py2024.xlsx"
 file2 = "Burghfield Wednesday Evening Personal Handicap 17-04-24.xlsx"
 file3 = "Wednesday Results R1 170424.xlsx"
@@ -27,7 +26,7 @@ df4 = df3.merge(df2, on=["Name", "Class", "Sail"], how="outer")
 df4 = df3.merge(df1, left_on="Class", right_on="Class", how="left")
 df4["Result"] = df4["Result"].apply(pd.to_numeric, errors="coerce")
 df4["Result"] = df4["Result"].fillna(0)
-# df4["Personal Handicap"] = 0
+
 
 print(df4.shape)
 
@@ -45,7 +44,6 @@ m2 = 0.4
 rb = 25
 t = 3300
 
-# df4["L"] = (rt - df4["Start"] + df4["Personal Handicap"]) * 60
 df4["L"] = (rt - df4["Start"]) * 60
 df4["D"] = (starters / 2) - df4["Result"]
 df4["P"] = 50 - (df4["Result"] / starters * 100)
@@ -54,10 +52,10 @@ df4["A1"] = df4["A"] * df4["L"] / ((rt - rb) * 60)
 df4["NRT"] = df4["L"] + df4["A1"]
 df4["NPH1"] = df4["NRT"] - ((rt - df4["Start"]) * 60)
 df4.loc[df4["Result"] > 0, "NPH"] = (round(((100 + df4["NPH1"] / 60) * 2)) / 2) - 100
-# df4.loc[df4["NPH"].isna(), "NPH"] = df4["Personal Handicap"]
+
 print(df4.head(5))
 
-# df4.to_csv(directory + "bsctest.csv", index=False)
+# create final dataframe
 
 df5 = df4[["Name", "Class", "Sail", "PY Handicap", "Start", "NPH"]].copy()
 df5["Start time"] = df5["Start"] + df5["NPH"]
@@ -90,4 +88,3 @@ final = df6[
 ]
 file = "Burghfield Wednesday Evening Personal Handicap " + date + ".xlsx"
 final.to_excel(file, index=False)
-# "C:\Users\PeterChaplin_fkt3wwy\OneDrive - Datazag Ltd\Documents\Burghfield"
